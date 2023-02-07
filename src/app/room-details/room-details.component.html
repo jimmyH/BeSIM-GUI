@@ -1,0 +1,104 @@
+<div class="container">
+  <div class="main">
+  <h1>{{ displayTemp(room.temp) }}&deg;</h1>
+
+<mat-form-field appearance="fill">
+  <mat-label>Day</mat-label>
+  <mat-select [(value)]="selectedDay" (selectionChange)="selectDay($event)">
+    <mat-option [value]="option.value" *ngFor="let option of days">{{ option.viewValue }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+  </div>
+
+<div class="graph">
+<google-chart #chart (select)="onChartSelect($event)" 
+   style="width: 100%"
+   [type]="type"  
+   [data]="data"  
+   [columns]="columnNames"  
+   [options]="options"  
+   [dynamicResize]="true">
+</google-chart>
+  </div>
+
+  <div class="nav">
+    <mat-icon *ngIf="room.cmdissued==1">autorenew</mat-icon>
+    <mat-icon *ngIf="room.heating">whatshot</mat-icon>
+    <mat-icon *ngIf="room.winter==0">ac_unit</mat-icon>
+    <div *ngIf="room.advance==1">A</div>
+    <div *ngIf="room.boost==1">B</div>
+  </div>
+
+
+  <div class="aside">
+<span class="spacer"><p></p></span>
+
+    <div [ngClass]="room.t1==room.settemp ? 'temp-bold' : 'temp-norm'">
+      <div>T1: {{ displayTemp(room.t1) }}&deg;</div>
+      <div><button mat-icon-button (click)="t1Up()"><mat-icon aria-label="Up">keyboard_arrow_up</mat-icon></button></div>
+      <div><button mat-icon-button (click)="t1Down()"><mat-icon aria-label="Down">keyboard_arrow_down</mat-icon></button></div>
+    </div>
+
+    <div [ngClass]="room.t2==room.settemp ? 'temp-bold' : 'temp-norm'">
+      T2: {{ displayTemp(room.t2) }}&deg;
+      <div><button mat-icon-button (click)="t2Up()"><mat-icon aria-label="Up">keyboard_arrow_up</mat-icon></button></div>
+      <div><button mat-icon-button (click)="t2Down()"><mat-icon aria-label="Down">keyboard_arrow_down</mat-icon></button></div>
+    </div>
+
+    <div [ngClass]="room.t3==room.settemp ? 'temp-bold' : 'temp-norm'">
+      T3: {{ displayTemp(room.t3) }}&deg;
+      <div><button mat-icon-button (click)="t3Up()"><mat-icon aria-label="Up">keyboard_arrow_up</mat-icon></button></div>
+      <div><button mat-icon-button (click)="t3Down()"><mat-icon aria-label="Down">keyboard_arrow_down</mat-icon></button></div>
+    </div>
+
+
+    
+  </div>
+
+  <div class="footer">
+    <mat-button-toggle-group name="season" aria-label="season" (change)="setSeason($event.value)">
+      <mat-button-toggle value=0 [checked]="room.winter==0">Cooling</mat-button-toggle>
+      <mat-button-toggle value=1 [checked]="room.winter==1">Heating</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group name="mode" aria-label="Mode" (change)="setMode($event.value)">
+      <mat-button-toggle value="0" [checked]="room.mode==0">Auto</mat-button-toggle>
+      <mat-button-toggle value="1" [checked]="room.mode==1">Manual</mat-button-toggle>
+      <mat-button-toggle value="2" [checked]="room.mode==2">Holiday</mat-button-toggle>
+      <mat-button-toggle value="3" [checked]="room.mode==3">Party</mat-button-toggle>
+      <mat-button-toggle value="4" [checked]="room.mode==4">Off</mat-button-toggle>
+      <mat-button-toggle value="5" [checked]="room.mode==5">DHW</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group name="units" aria-label="units" (change)="setUnits($event.value)">
+      <mat-button-toggle value=0 [checked]="room.units==0">&deg;C</mat-button-toggle>
+      <mat-button-toggle value=1 [checked]="room.units==1">&deg;F</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle value="boost" [checked]="room.boost==1" (change)="setBoost((room.boost+1)%2)">Boost</mat-button-toggle>
+    <mat-button-toggle value="advance" [checked]="room.advance==1" (change)="setAdvance((room.advance+1)%2)">Advance</mat-button-toggle>
+  </div>
+
+</div>
+
+
+
+
+
+<!--
+<div><span>DeviceId </span>{{deviceId}}</div>
+<div><span>RoomId </span>{{roomId}}</div>
+
+<div><span>Heating </span>{{room.heating}}</div>
+<div><span>Temperature </span>{{room.temp}}</div>
+<div><span>Set Temperature </span>{{room.settemp}}</div>
+-->
+
+<!--
+<div class="box box-default">
+    <code>
+        <pre>{{room |json}}</pre>
+    </code>
+</div>
+-->

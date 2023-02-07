@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  height: 100vh;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-gap: 0px;
+  grid-template-areas:
+  "header"
+  "child";
+}
+
+.header {
+  grid-area: header;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.child {
+  grid-area: child;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+  //overflow: hidden;
+}

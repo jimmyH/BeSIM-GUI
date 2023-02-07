@@ -1,0 +1,8 @@
+<div style="padding: 13px;">
+    <mat-spinner *ngIf="rooms.length === 0"></mat-spinner>
+    <mat-card *ngFor="let room of rooms" style="margin-top:11px;">
+        <mat-card-content routerLink="/devices/{{deviceId}}/rooms/{{room}}">
+          <mat-card-title>{{room}}</mat-card-title> 
+        </mat-card-content>
+    </mat-card>
+</div>

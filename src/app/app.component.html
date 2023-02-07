@@ -1,0 +1,19 @@
+<div class="wrapper">
+
+<div class="header">
+<mat-toolbar color="primary">
+  <span>
+    BeSMART
+  </span>
+  <button mat-button routerLink="/">Devices</button>
+  <button mat-button routerLink="/about">About</button>
+  <span class="spacer"></span>
+  <span>{{getDay()}} {{time | date: 'HH:mm' }}</span>
+</mat-toolbar>
+</div>
+
+<div class="child">
+<router-outlet></router-outlet>
+</div>
+
+</div>

@@ -1,0 +1,13 @@
+<div *ngIf="device" class="devices">
+  <!-- <h2>{{product.prod_name | uppercase}} Details</h2> -->
+  <div><span>WiFi Signal: </span>{{device.wifisignal}}</div>
+  <div><span>Version: </span>{{device.version}}</div>
+  <div><span>IP : </span>{{device.addr[0]}}:{{device.addr[1]}}</div>
+  <div><span>Last Seen: </span>{{device.lastseen*1000 | date:'full'}}</div>
+  
+  <div>
+    <button routerLink="/devices/{{id}}/rooms">
+      Rooms
+    </button>
+  </div>
+</div>
