@@ -15,3 +15,9 @@ To run from docker:
  - `API_URL=http://<your besim server>/api/v1.0/ docker run -e API_URL -it -p 4200:4200 besim_gui:latest`
 
 Then connect to port 4200 from a browser.
+
+For a production environment:
+ - `docker build -f Dockerfile.prod --build-arg API_URL=http://<your besim server>/api/v1.0/ . -t besim_gui:latest`
+ - `docker run -p 80:80 besim_gui:latest`
+
+

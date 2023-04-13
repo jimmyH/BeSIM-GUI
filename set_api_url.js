@@ -1,7 +1,9 @@
 var replace = require('replace-in-file');
 
 const options = {
-  files: 'src/environments/environment.ts',
+  files: [
+    'src/environments/environment.ts',
+    'src/environments/environment.prod.ts' ],
   from: /{API_URL}/g,
   to: process.env.API_URL,
   allowEmptyPaths: false
