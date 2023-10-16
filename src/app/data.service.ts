@@ -31,6 +31,10 @@ export class DataService {
     return this.http.get(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId);
   }
 
+  getWeather(){
+    return this.http.get(this.REST_API_SERVER + 'weather');
+  }
+
   setT1(deviceId: String, roomId: String, val: String){
     const headers = { 'Content-Type' : 'application/json' };
     this.http.put(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/t1', val, { headers: headers })

@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatListModule } from '@angular/material/list';
 
 import { RouterModule } from '@angular/router';
 import { DeviceComponent } from './device/device.component';
@@ -48,6 +49,7 @@ import { GoogleChartsModule } from 'angular-google-charts';
     MatButtonToggleModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatListModule,
     GoogleChartsModule,
   ],
   providers: [],

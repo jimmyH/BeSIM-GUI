@@ -146,6 +146,8 @@ export class RoomDetailsComponent implements OnInit {
   deviceId: any;
   roomId: any;
   interval: any;
+  weather : any;
+
   @ViewChild('chart', {static: false}) chart!: GoogleChartComponent; // non-null assertion entity
 
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) { }
@@ -154,6 +156,12 @@ export class RoomDetailsComponent implements OnInit {
     // For now refreshData with a timer, in future we probably should use an Observable..
     this.refreshData();
     this.interval = setInterval(() => { this.refreshData(); }, 5000);
+
+    // @todo the weather should also get refresh periodically
+    this.dataService.getWeather().subscribe((data: any) => {
+      console.log(data);
+      this.weather = data
+    })
   }
 
   refreshData(){
