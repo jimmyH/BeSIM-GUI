@@ -145,7 +145,8 @@ export class RoomDetailsComponent implements OnInit {
   room: any;
   deviceId: any;
   roomId: any;
-  interval: any;
+  dataTimerId: any;
+  weatherTimerId: any;
   weather : any;
 
   @ViewChild('chart', {static: false}) chart!: GoogleChartComponent; // non-null assertion entity
@@ -155,13 +156,15 @@ export class RoomDetailsComponent implements OnInit {
   ngOnInit(): void {
     // For now refreshData with a timer, in future we probably should use an Observable..
     this.refreshData();
-    this.interval = setInterval(() => { this.refreshData(); }, 5000);
+    this.dataTimerId = setInterval(() => { this.refreshData(); }, 5000);
 
-    // @todo the weather should also get refresh periodically
-    this.dataService.getWeather().subscribe((data: any) => {
-      console.log(data);
-      this.weather = data
-    })
+    this.refreshWeatherData();
+    this.weatherTimerId = setInterval(() => { this.refreshWeatherData(); }, 600000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.dataTimerId);
+    clearInterval(this.weatherTimerId);
   }
 
   refreshData(){
@@ -172,6 +175,13 @@ export class RoomDetailsComponent implements OnInit {
       this.roomId = this.route.snapshot.params.roomId;
 
       this.updateGraph();
+    })
+  }
+
+  refreshWeatherData(){
+    this.dataService.getWeather().subscribe((data: any) => {
+      console.log(data);
+      this.weather = data
     })
   }
 
