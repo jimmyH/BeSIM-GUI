@@ -33,8 +33,7 @@ h2 {
   .nav {
     grid-area: nav;
     /* margin-left: 0.6rem; */
-    //background-color: #2A92BF;
-    background-color: #F4CE46;
+    /* background-color: #F4CE46; */
     text-align: center;
     /* margin: auto; */
     /* place-self: center; */
@@ -43,15 +42,14 @@ h2 {
   .privacy-policy,
   .main {
     grid-area: content;
-    background-color: #F4CE46;
+    /* background-color: #F4CE46; */
     padding: 25px;
     text-align: center;
   }
   
   .graph {
     grid-area: graph;
-    background-color: #F4CE46;
-    //background-color: #2A92BF;
+    /* background-color: #F4CE46; */
     padding: 25px;
     text-align: center;
   }
@@ -59,15 +57,14 @@ h2 {
   .aside {
     grid-area: side;
     /* margin-right: 0.6rem; */
-    //background-color: #2A92BF;
-    background-color: #F4CE46;
+    /* background-color: #F4CE46; */
     text-align: center;
   }
   
   .footer {
     grid-area: footer;
     background-color: #2A92BF;
-    color: white;
+    /* color: white; */
     text-align: center;
     padding: 25px 0;
   }

@@ -5,6 +5,8 @@
   <div><span>IP : </span>{{device.addr[0]}}:{{device.addr[1]}}</div>
   <div><span>Last Seen: </span>{{device.lastseen*1000 | date:'full'}}</div>
   <div><span>OpenTherm:</span></div>
+  <div><span>Boiler On: </span>{{device.boilerOn}}</div>
+  <div><span>DHW On: </span>{{device.dhwMode}}</div>
   <div><span>tFLO = reading of the boiler flow sensor temperature: </span>{{device.tFLO}}</div>
   <div><span>tdH = reading of the boiler DHW sensor temperature: </span>{{device.tdH}}</div>
   <div><span>tESt = reading of the boiler outdoor sensor temperature: </span>{{device.tESt}}</div>
