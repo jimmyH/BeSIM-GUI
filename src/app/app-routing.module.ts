@@ -5,6 +5,7 @@ import { DeviceComponent } from './device/device.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { RoomComponent } from './room/room.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
+import { RoomHistoryComponent } from './room-history/room-history.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'devices/:id', component: DeviceDetailsComponent, data: { title: 'Device Details' } },
   { path: 'devices/:deviceId/rooms', component: RoomComponent, data: { title: 'Room List' } },
   { path: 'devices/:deviceId/rooms/:roomId', component: RoomDetailsComponent, data: { title: 'Thermostat Status' } },
+  { path: 'devices/:deviceId/rooms/:roomId/history', component: RoomHistoryComponent, data: { title: 'Thermostat History' } },
 ];
 
 @NgModule({

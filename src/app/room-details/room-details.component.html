@@ -2,12 +2,15 @@
   <div class="main">
   <h1>{{ displayTemp(room.temp) }}&deg;</h1>
 
+  {{ weather.properties.timeseries[0].data.instant.details.air_temperature }}&deg;
+  <p><img src="/assets/weather/{{weather.properties.timeseries[0].data.next_6_hours.summary.symbol_code}}.png" alt="{{weather.properties.timeseries[0].data.next_6_hours.summary.symbol_code}}"></p>
+<!--
 <mat-list role="list">
-  <!-- <mat-list-item role="listitem">Forecast: {{ weather.properties.timeseries[0].data.next_6_hours.summary.symbol_code }}</mat-list-item> -->
-  <mat-list-item role="listitem"> <img src="/assets/weather/{{weather.properties.timeseries[0].data.next_6_hours.summary.symbol_code}}.png" alt="{{weather.properties.timeseries[0].data.next_6_hours.summary.symbol_code}}"> </mat-list-item>
-  <mat-list-item role="listitem">Temp: {{ weather.properties.timeseries[0].data.instant.details.air_temperature }}&deg;</mat-list-item>
-  <mat-list-item role="listitem">Wind: {{ weather.properties.timeseries[0].data.instant.details.wind_speed }}</mat-list-item>
+  <mat-list-item role="listitem">Forecast: {{ weather.properties.timeseries[0].data.next_6_hours.summary.symbol_code }}</mat-list-item>
+  <mat-list-item role="listitem">{{ weather.properties.timeseries[0].data.instant.details.air_temperature }}&deg;</mat-list-item>
+  <mat-list-item role="listitem">{{ weather.properties.timeseries[0].data.instant.details.wind_speed }}m/s</mat-list-item>
 </mat-list>
+-->
 
 <mat-form-field appearance="fill">
   <mat-label>Day</mat-label>
@@ -34,7 +37,7 @@
     <mat-icon *ngIf="room.heating">whatshot</mat-icon>
     <mat-icon *ngIf="room.winter==0">ac_unit</mat-icon>
     <div *ngIf="room.advance==1">A</div>
-    <div *ngIf="room.boost==1">B</div>
+    <div *ngIf="room.boost==1 || room.fakeboost!=0">B</div>
   </div>
 
 
@@ -69,6 +72,8 @@
       <mat-button-toggle value=1 [checked]="room.winter==1">Heating</mat-button-toggle>
     </mat-button-toggle-group>
 
+    <mat-divider></mat-divider>
+
     <mat-button-toggle-group name="mode" aria-label="Mode" (change)="setMode($event.value)">
       <mat-button-toggle value="0" [checked]="room.mode==0">Auto</mat-button-toggle>
       <mat-button-toggle value="1" [checked]="room.mode==1">Manual</mat-button-toggle>
@@ -78,34 +83,19 @@
       <mat-button-toggle value="5" [checked]="room.mode==5">DHW</mat-button-toggle>
     </mat-button-toggle-group>
 
+    <mat-divider></mat-divider>
+
     <mat-button-toggle-group name="units" aria-label="units" (change)="setUnits($event.value)">
       <mat-button-toggle value=0 [checked]="room.units==0">&deg;C</mat-button-toggle>
       <mat-button-toggle value=1 [checked]="room.units==1">&deg;F</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <mat-button-toggle value="boost" [checked]="room.boost==1" (change)="setBoost((room.boost+1)%2)">Boost</mat-button-toggle>
+    <mat-button-toggle value="boost" [checked]="room.boost==1 || room.fakeboost!=0" (change)="toggleFakeBoost(room.boost,room.fakeboost)">Boost</mat-button-toggle>
     <mat-button-toggle value="advance" [checked]="room.advance==1" (change)="setAdvance((room.advance+1)%2)">Advance</mat-button-toggle>
+
+    <mat-divider></mat-divider>
+    <button mat-raised-button color="primary" routerLink="/devices/{{deviceId}}/rooms/{{roomId}}/history">Graphs</button>
+
   </div>
 
 </div>
-
-
-
-
-
-<!--
-<div><span>DeviceId </span>{{deviceId}}</div>
-<div><span>RoomId </span>{{roomId}}</div>
-
-<div><span>Heating </span>{{room.heating}}</div>
-<div><span>Temperature </span>{{room.temp}}</div>
-<div><span>Set Temperature </span>{{room.settemp}}</div>
--->
-
-<!--
-<div class="box box-default">
-    <code>
-        <pre>{{room |json}}</pre>
-    </code>
-</div>
--->

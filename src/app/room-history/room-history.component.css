@@ -1,0 +1,72 @@
+h1 {
+  font-size: 20vmin;
+}
+
+h2 {
+  font-size: 3vmin;
+}
+
+.temp-bold {
+  font-weight: bold;
+}
+
+.temp-norm {
+  font-weight: normal;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap: 0px;
+    grid-template-areas:
+    "nav content side"
+    "graph graph graph"
+    "footer footer footer";
+    height: 100vh;
+  }
+
+  .nav {
+    grid-area: nav;
+    /* margin-left: 0.6rem; */
+    /* background-color: #F4CE46; */
+    text-align: center;
+    /* margin: auto; */
+    /* place-self: center; */
+  }
+ 
+  .privacy-policy,
+  .main {
+    grid-area: content;
+    /* background-color: #F4CE46; */
+    padding: 25px;
+    text-align: center;
+  }
+  
+  .graph {
+    grid-area: graph;
+    /* background-color: #F4CE46; */
+    padding: 25px;
+    text-align: center;
+    height: 100vh;
+  }
+
+  .aside {
+    grid-area: side;
+    /* margin-right: 0.6rem; */
+    /* background-color: #F4CE46; */
+    text-align: center;
+  }
+  
+  .footer {
+    grid-area: footer;
+    background-color: #2A92BF;
+    /* color: white; */
+    text-align: center;
+    padding: 25px 0;
+  }
+

@@ -229,6 +229,16 @@ export class RoomDetailsComponent implements OnInit {
     this.room.boost = val; 
     this.dataService.setBoost(this.route.snapshot.params.deviceId, this.route.snapshot.params.roomId, this.room.boost);
   }
+  toggleFakeBoost(boost: any, fakeboost: any){
+    let val: any = 0;
+    if (boost==0){
+      if (fakeboost==0) {
+        val = 1
+      }
+      this.room.fakeboost = val;
+      this.dataService.setFakeBoost(this.route.snapshot.params.deviceId, this.route.snapshot.params.roomId, this.room.fakeboost);
+    }
+  }
   setAdvance(val: any){
     this.room.advance = val;
     this.dataService.setAdvance(this.route.snapshot.params.deviceId, this.route.snapshot.params.roomId, this.room.advance);

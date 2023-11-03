@@ -23,6 +23,7 @@ import { DeviceComponent } from './device/device.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { RoomComponent } from './room/room.component';
 import { RoomDetailsComponent } from './room-details/room-details.component';
+import { RoomHistoryComponent } from './room-history/room-history.component';
 
 import { GoogleChartsModule } from 'angular-google-charts';
 
@@ -33,7 +34,8 @@ import { GoogleChartsModule } from 'angular-google-charts';
     DeviceComponent,
     DeviceDetailsComponent,
     RoomComponent,
-    RoomDetailsComponent
+    RoomDetailsComponent,
+    RoomHistoryComponent
   ],
   imports: [
     BrowserModule,

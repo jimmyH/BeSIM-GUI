@@ -35,6 +35,14 @@ export class DataService {
     return this.http.get(this.REST_API_SERVER + 'weather');
   }
 
+  getWeatherHistory(date_from: String){
+    return this.http.get(this.REST_API_SERVER + 'weather/history' + '?from=' + date_from );
+  }
+
+  getRoomHistory(deviceId: String, roomId: String, date_from: String){
+    return this.http.get(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/history' + '?from=' + date_from );
+  }
+
   setT1(deviceId: String, roomId: String, val: String){
     const headers = { 'Content-Type' : 'application/json' };
     this.http.put(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/t1', val, { headers: headers })
@@ -64,6 +72,11 @@ export class DataService {
   setBoost(deviceId: String, roomId: String, val: String){
     const headers = { 'Content-Type' : 'application/json' };
     this.http.put(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/boost', val, { headers: headers })
+        .subscribe();
+  }
+  setFakeBoost(deviceId: String, roomId: String, val: String){
+    const headers = { 'Content-Type' : 'application/json' };
+    this.http.put(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/fakeboost', val, { headers: headers })
         .subscribe();
   }
   setMode(deviceId: String, roomId: String, val: String){
