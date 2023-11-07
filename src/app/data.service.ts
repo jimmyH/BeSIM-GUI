@@ -35,12 +35,20 @@ export class DataService {
     return this.http.get(this.REST_API_SERVER + 'weather');
   }
 
-  getWeatherHistory(date_from: String){
-    return this.http.get(this.REST_API_SERVER + 'weather/history' + '?from=' + date_from );
+  getWeatherHistory(date_from: String, date_to?: String | null){
+    if (date_to) {
+      return this.http.get(this.REST_API_SERVER + 'weather/history' + '?from=' + date_from + '&to=' + date_to);
+    } else {
+      return this.http.get(this.REST_API_SERVER + 'weather/history' + '?from=' + date_from);
+    }
   }
 
-  getRoomHistory(deviceId: String, roomId: String, date_from: String){
-    return this.http.get(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/history' + '?from=' + date_from );
+  getRoomHistory(deviceId: String, roomId: String, date_from: String, date_to?: String | null){
+    if (date_to) {
+      return this.http.get(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/history' + '?from=' + date_from + '&to=' + date_to);
+    } else {
+      return this.http.get(this.REST_API_SERVER + 'devices/' + deviceId + '/rooms/' + roomId + '/history' + '?from=' + date_from);
+    }
   }
 
   setT1(deviceId: String, roomId: String, val: String){

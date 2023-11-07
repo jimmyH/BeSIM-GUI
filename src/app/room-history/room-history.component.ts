@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoogleChartComponent, ChartType, ChartSelectionChangedEvent } from 'angular-google-charts';
-import { MatSelectChange } from '@angular/material/select';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as moment from 'moment';
 
 export interface DataPoint {
   ts: Date;
   temp: number;
   settemp: number; 
+  heating: number;
 }
 
 export interface WeatherDataPoint {
@@ -26,7 +27,7 @@ export class RoomHistoryComponent implements OnInit {
 
   type: ChartType = ChartType.LineChart
   data = new Array<Array<Date | number | null>>();
-  columnNames = ['Time', 'Temp', 'SetTemp', 'OutsideTemp' ];  
+  columnNames = ['Time', 'Temp', 'SetTemp', 'OutsideTemp', 'HeatingRequest' ];
   options = {      
     'vAxis' : { 'title' : 'Temperature',
                 'minValue' : 10, 'maxValue' : 20,
@@ -45,72 +46,87 @@ export class RoomHistoryComponent implements OnInit {
     //'chartArea' : { 'width' : '80%', 'height' : '80%' },
     'width' : '100%',
     'height' : '100%',
+    'explorer' : {   // NB Does not work with touch/gestures :(
+      'axis' : 'horizontal',
+      'keepInBounds' : true,
+      'actions' : [ 'dragToZoom', 'rightClickToReset' ],
+    },
   };  
 
   onChartSelect(event: ChartSelectionChangedEvent) {
   }
 
 
-  updateGraph(forceRefresh: boolean = false): void{
+  updateGraph(roomHistory : any, weatherHistory : any) : void {
     // [{"ts": "2023-11-02T12:54:36.182454+00:00", "temp": 186, "settemp": 190}, 
-    //while (this.data.length>0) { this.data.pop(); }
-
     this.data = new Array<Array<Date | number | null>>();
 
-    this.roomHistory.forEach( (elem: DataPoint) => {
-      let v = new Array<Date|number|null>(new Date(elem.ts), elem.temp, elem.settemp, null);
+    roomHistory.forEach( (elem: DataPoint) => {
+      // hack: if a series is all null the chart will not render
+      var heating: number;
+      if (elem.heating) { heating = elem.heating; } else { heating = 0; }  
+      let v = new Array<Date|number|null>(new Date(elem.ts), elem.temp, elem.settemp, null, heating);
       this.data.push(v);
     });
-    this.weatherHistory.forEach( (elem: WeatherDataPoint) => {
-      let v = new Array<Date|number|null>(new Date(elem.ts), null, null, elem.temp);
+    weatherHistory.forEach( (elem: WeatherDataPoint) => {
+      let v = new Array<Date|number|null>(new Date(elem.ts), null, null, elem.temp, null);
       this.data.push(v);
     });
 
-    if (forceRefresh){
-      this.data = Object.assign([], this.data);
-    }
+    this.data = Object.assign([], this.data); // force refresh
   }
 
-  roomHistory: any;
   deviceId: any;
   roomId: any;
-  roomHistoryTimerId: any;
-  weatherHistory: any;
-  weatherHistoryTimerId: any;
+  historyTimerId: any;
+  startDate: Date = moment().subtract(2,'days').toDate();
+  endDate: Date | null = null;
 
   @ViewChild('chart', {static: false}) chart!: GoogleChartComponent; // non-null assertion entity
 
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this.refreshRoomHistoryData();
-    this.roomHistoryTimerId = setInterval(() => { this.refreshRoomHistoryData(); }, 60000);
-    this.refreshWeatherHistoryData();
-    this.weatherHistoryTimerId = setInterval(() => { this.refreshWeatherHistoryData(); }, 600000);
+    this.refreshHistoryData();
+    this.historyTimerId = setInterval(() => { this.refreshHistoryData(); }, 60000);
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.roomHistoryTimerId)
-    clearInterval(this.weatherHistoryTimerId)
+    clearInterval(this.historyTimerId)
   }
 
-  refreshRoomHistoryData(){
-    var date : string = moment().subtract(2,'weeks').format(); // @todo make configurable
-    this.dataService.getRoomHistory(this.route.snapshot.params.deviceId, this.route.snapshot.params.roomId, date).subscribe((data: any) =>{
-      console.log(data);
-      this.roomHistory = data;
+  refreshHistoryData(){
+    var from_date : string = this.startDate.toISOString();
+    var to_date : string | null = null;
+    if (this.endDate) {
+      to_date = this.endDate.toISOString();
+    }
+
+    // @todo Use concatMap, switchMap etc. so we do not nest the observables...
+    this.dataService.getRoomHistory(this.route.snapshot.params.deviceId, this.route.snapshot.params.roomId, from_date, to_date).subscribe((roomHistory: any) =>{
+      console.log(roomHistory);
       this.deviceId = this.route.snapshot.params.deviceId;
       this.roomId = this.route.snapshot.params.roomId;
-      this.updateGraph();
-    })
+
+      this.dataService.getWeatherHistory(from_date,to_date).subscribe((weatherHistory: any) =>{
+        console.log(weatherHistory);
+        this.updateGraph(roomHistory,weatherHistory);
+      });
+    });
+
   }
 
-  refreshWeatherHistoryData(){
-    var date : string = moment().subtract(2,'weeks').format(); // @todo make configurable
-    this.dataService.getWeatherHistory(date).subscribe((data: any) =>{
-      console.log(data);
-      this.weatherHistory = data;
-      this.updateGraph();
-    })
+  updateStartDate(event: MatDatepickerInputEvent<Date>) {
+    if (event.value) {
+      this.startDate = event.value;
+      this.refreshHistoryData();
+    }
+  }
+
+  updateEndDate(event: MatDatepickerInputEvent<Date>) {
+    if (event.value) {
+      this.endDate = event.value;
+      this.refreshHistoryData();
+    }
   }
 }
