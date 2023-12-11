@@ -4,6 +4,8 @@ First stab at a basic Angular GUI for [BeSIM](https://github.com/jimmyH/BeSIM), 
 
 It isn't very pretty, I don't do GUIs...
 
+![Example GUI](BeSim_GUI.png)
+
 Currently you need to run the `set_api_url.js` script to set the URL of your BeSIM server in the angular environment.
 
 To run manually:
