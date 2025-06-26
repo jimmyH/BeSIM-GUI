@@ -33,6 +33,8 @@
   </div>
 
   <div class="nav">
+    <mat-icon *ngIf="room.lowbattery==1">battery_0_bar</mat-icon>
+    <mat-icon *ngIf="room.lowbattery==0">battery_full</mat-icon>
     <mat-icon *ngIf="room.cmdissued==1">autorenew</mat-icon>
     <mat-icon *ngIf="room.heating">whatshot</mat-icon>
     <mat-icon *ngIf="room.winter==0">ac_unit</mat-icon>
