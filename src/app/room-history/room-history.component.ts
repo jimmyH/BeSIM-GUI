@@ -3,7 +3,7 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoogleChartComponent, ChartType, ChartSelectionChangedEvent } from 'angular-google-charts';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export interface DataPoint {
   ts: Date;
@@ -18,9 +18,10 @@ export interface WeatherDataPoint {
 }
 
 @Component({
-  selector: 'app-room-history',
-  templateUrl: './room-history.component.html',
-  styleUrls: ['./room-history.component.css']
+    selector: 'app-room-history',
+    templateUrl: './room-history.component.html',
+    styleUrls: ['./room-history.component.css'],
+    standalone: false
 })
 
 export class RoomHistoryComponent implements OnInit {

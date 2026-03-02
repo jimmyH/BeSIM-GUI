@@ -3,7 +3,7 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoogleChartComponent, ChartType, ChartSelectionChangedEvent } from 'angular-google-charts';
 import { MatSelectChange } from '@angular/material/select';
-import * as moment from 'moment';
+import moment from 'moment';
 
 interface Day {
   value: number;
@@ -11,9 +11,10 @@ interface Day {
 };
 
 @Component({
-  selector: 'app-room-details',
-  templateUrl: './room-details.component.html',
-  styleUrls: ['./room-details.component.css']
+    selector: 'app-room-details',
+    templateUrl: './room-details.component.html',
+    styleUrls: ['./room-details.component.css'],
+    standalone: false
 })
 
 export class RoomDetailsComponent implements OnInit {

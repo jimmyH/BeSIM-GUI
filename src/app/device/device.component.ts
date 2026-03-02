@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 
 @Component({
-  selector: 'app-device',
-  templateUrl: './device.component.html',
-  styleUrls: ['./device.component.css']
+    selector: 'app-device',
+    templateUrl: './device.component.html',
+    styleUrls: ['./device.component.css'],
+    standalone: false
 })
 export class DeviceComponent implements OnInit {
 

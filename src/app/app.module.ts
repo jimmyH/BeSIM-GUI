@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AboutComponent } from './about/about.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -30,37 +30,30 @@ import { RoomHistoryComponent } from './room-history/room-history.component';
 
 import { GoogleChartsModule } from 'angular-google-charts';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    AboutComponent,
-    DeviceComponent,
-    DeviceDetailsComponent,
-    RoomComponent,
-    RoomDetailsComponent,
-    RoomHistoryComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    RouterModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatButtonToggleModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatListModule,
-    GoogleChartsModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MatNativeDateModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        AboutComponent,
+        DeviceComponent,
+        DeviceDetailsComponent,
+        RoomComponent,
+        RoomDetailsComponent,
+        RoomHistoryComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        RouterModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatButtonToggleModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatListModule,
+        GoogleChartsModule,
+        MatDatepickerModule,
+        MatInputModule,
+        MatNativeDateModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

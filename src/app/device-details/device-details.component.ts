@@ -3,9 +3,10 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-device-details',
-  templateUrl: './device-details.component.html',
-  styleUrls: ['./device-details.component.css']
+    selector: 'app-device-details',
+    templateUrl: './device-details.component.html',
+    styleUrls: ['./device-details.component.css'],
+    standalone: false
 })
 export class DeviceDetailsComponent implements OnInit {
 
