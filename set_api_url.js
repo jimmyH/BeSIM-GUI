@@ -10,7 +10,7 @@ const options = {
 };
 
 try {
-  let changedFiles = replace.sync(options);
+  let changedFiles = replaceInFileSync(options);
   console.log(options);
   console.log(changedFiles);
   console.log('API_URL set: ' + process.env.API_URL);
