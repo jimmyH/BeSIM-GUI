@@ -3,7 +3,7 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoogleChartComponent, ChartType, ChartSelectionChangedEvent } from 'angular-google-charts';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export interface DataPoint {
   ts: Date;
@@ -80,7 +80,7 @@ export class RoomHistoryComponent implements OnInit {
   deviceId: any;
   roomId: any;
   historyTimerId: any;
-  startDate: Date = moment().subtract(2,'days').toDate();
+  startDate: Date = dayjs().subtract(2,'days').toDate();
   endDate: Date | null = null;
 
   @ViewChild('chart', {static: false}) chart!: GoogleChartComponent; // non-null assertion entity

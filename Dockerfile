@@ -1,4 +1,4 @@
-# Run using: docker run -it --rm -e API_URL=https:///besim-api.kagisoft.co.uk/api/v1.0/ <...>
+# Run using: docker run -it --rm -e API_URL=https:///besim-api.kagisoft.co.uk/api/v1.0/ -p 4200:4200 <...>
 FROM node:22-alpine
 RUN npm install -g @angular/cli@20
 EXPOSE 4200

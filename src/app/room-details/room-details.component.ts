@@ -3,7 +3,7 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoogleChartComponent, ChartType, ChartSelectionChangedEvent } from 'angular-google-charts';
 import { MatSelectChange } from '@angular/material/select';
-import moment from 'moment';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface Day {
   value: number;
@@ -59,7 +59,7 @@ export class RoomDetailsComponent implements OnInit {
       console.log(event);
       const { row, column } = event['selection'][0];
       if (row != undefined){
-        let time : moment.Moment = this.getProgTime(row);
+        let time : Dayjs = this.getProgTime(row);
         let dow : number = this.selectedDay;
         let val : number = this.getProg( dow, row); // 0..2
         let timeStr : string = time.format('H:mm');
@@ -72,14 +72,14 @@ export class RoomDetailsComponent implements OnInit {
   }
 
   // Converts { hours, minutes } to a 30min index into the day 0..47
-  getProgIdx(time: moment.Moment): number{
+  getProgIdx(time: Dayjs): number{
       return 2*time.hour() + Math.floor(time.minute()/30);
   }
 
-  getProgTime(idx: number): moment.Moment{
+  getProgTime(idx: number): Dayjs{
       let hr: number = Math.floor(idx/2);
       let min: number = (idx%2)*30; 
-      return moment({ hours: hr, minute: min});
+      return dayjs().hour(hr).minute(min);
   }
 
   // 
@@ -125,14 +125,14 @@ export class RoomDetailsComponent implements OnInit {
     let dow : number = this.selectedDay;
     while (this.data.length>0) { this.data.pop(); }
     for(let hour = 0; hour < 24; hour++) {
-      let time : moment.Moment;
+      let time : Dayjs;
       let val : number;
 
-      time = moment({ hour });
+      time = dayjs().hour(hour).minute(0);
       val = this.getProg(dow, this.getProgIdx(time));
       this.data.push( [ time.format('H:mm'), val+1 ] ); // val 1..3
 
-      time = moment({ hour, minute: 30 });
+      time = dayjs().hour(hour).minute(30);
       val = this.getProg(dow, this.getProgIdx(time));
       this.data.push( [ time.format('H:mm'), val+1 ] ); // val 1..3
 
