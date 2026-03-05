@@ -1,32 +1,17 @@
 use dioxus::prelude::*;
-use js_sys::Date;
+
+#[cfg(target_arch = "wasm32")]
 use plotters::prelude::*;
+
+#[cfg(target_arch = "wasm32")]
 use plotters_canvas::CanvasBackend;
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
-use wasm_bindgen::JsValue;
+#[cfg(target_arch = "wasm32")]
 use web_sys::HtmlCanvasElement;
 
-use crate::api::get_json;
+use crate::api::{self, get_json};
 use crate::models::{RoomHistoryPoint, WeatherHistoryPoint};
-
-fn to_iso_date(date: &str) -> Option<String> {
-    if date.is_empty() {
-        return None;
-    }
-    let value = format!("{}T00:00:00", date);
-    let js_date = Date::new(&JsValue::from_str(&value));
-    Some(js_date.to_iso_string().as_string().unwrap_or(value))
-}
-
-fn parse_ts(ts: &str) -> Option<f64> {
-    let js_date = Date::new(&JsValue::from_str(ts));
-    let millis = js_date.get_time();
-    if millis.is_nan() {
-        None
-    } else {
-        Some(millis)
-    }
-}
 
 #[derive(Clone, PartialEq)]
 struct SeriesData {
@@ -35,6 +20,7 @@ struct SeriesData {
     points: Vec<(f64, f64)>,
 }
 
+#[cfg(target_arch = "wasm32")]
 fn hex_color(value: &str) -> RGBColor {
     let trimmed = value.trim_start_matches('#');
     if trimmed.len() != 6 {
@@ -46,6 +32,7 @@ fn hex_color(value: &str) -> RGBColor {
     RGBColor(r, g, b)
 }
 
+#[cfg(target_arch = "wasm32")]
 fn draw_chart(canvas: &HtmlCanvasElement, series: &[SeriesData]) {
     if series.is_empty() {
         return;
@@ -90,7 +77,7 @@ fn draw_chart(canvas: &HtmlCanvasElement, series: &[SeriesData]) {
     let _ = chart
         .configure_mesh()
         .disable_mesh()
-        .x_label_formatter(&|value| format_epoch_label(*value))
+        .x_label_formatter(&|value| api::format_epoch_label(*value))
         .x_labels(4)
         .y_labels(4)
         .draw();
@@ -99,18 +86,6 @@ fn draw_chart(canvas: &HtmlCanvasElement, series: &[SeriesData]) {
         let color = hex_color(&item.color);
         let _ = chart.draw_series(LineSeries::new(item.points.clone(), color.stroke_width(2)));
     }
-}
-
-fn format_epoch_label(value: f64) -> String {
-    if !value.is_finite() {
-        return String::new();
-    }
-    let date = Date::new(&JsValue::from_f64(value));
-    let day = date.get_date();
-    let month = date.get_month() + 1;
-    let hours = date.get_hours();
-    let minutes = date.get_minutes();
-    format!("{:02}/{:02} {:02}:{:02}", day, month, hours, minutes)
 }
 
 fn build_series(
@@ -123,7 +98,7 @@ fn build_series(
     let mut heating_points = Vec::new();
 
     for point in room_history {
-        if let Some(ts) = parse_ts(&point.ts) {
+        if let Some(ts) = api::parse_ts(&point.ts) {
             temp_points.push((ts, point.temp));
             set_points.push((ts, point.settemp));
             if let Some(heat) = point.heating {
@@ -133,7 +108,7 @@ fn build_series(
     }
 
     for point in weather_history {
-        if let Some(ts) = parse_ts(&point.ts) {
+        if let Some(ts) = api::parse_ts(&point.ts) {
             outside_points.push((ts, point.temp));
         }
     }
@@ -181,13 +156,7 @@ pub fn RoomHistoryPage(device_id: String, room_id: String) -> Element {
     let mut weather_history = use_signal(Vec::<WeatherHistoryPoint>::new);
     let mut error = use_signal(|| None::<String>);
 
-    let mut start_date = use_signal(|| {
-        let date = Date::new_0();
-        let day = date.get_date();
-        let adjusted = if day > 2 { day - 2 } else { 1 };
-        date.set_date(adjusted);
-        date.to_iso_string().as_string().unwrap_or_default()[..10].to_string()
-    });
+    let mut start_date = use_signal(|| api::local_date_minus_days(2));
     let mut end_date = use_signal(|| None::<String>);
 
     use_resource(move || {
@@ -198,8 +167,8 @@ pub fn RoomHistoryPage(device_id: String, room_id: String) -> Element {
 
         async move {
             loop {
-                let from = to_iso_date(&start_date).unwrap_or_default();
-                let to = end_date.as_ref().and_then(|value| to_iso_date(value));
+                let from = api::to_iso_date(&start_date).unwrap_or_default();
+                let to = end_date.as_ref().and_then(|value| api::to_iso_date(value));
 
                 let room_url = if let Some(to) = to.clone() {
                     format!(
@@ -252,29 +221,42 @@ pub fn RoomHistoryPage(device_id: String, room_id: String) -> Element {
 
     let canvas_id = "history-canvas";
 
-    use_effect(move || {
-        let room_history_data = room_history.read().clone();
-        let weather_history_data = weather_history.read().clone();
-        let series = build_series(&room_history_data, &weather_history_data);
+    #[cfg(target_arch = "wasm32")]
+    {
+        use_effect(move || {
+            let room_history_data = room_history.read().clone();
+            let weather_history_data = weather_history.read().clone();
+            let series = build_series(&room_history_data, &weather_history_data);
 
-        if let Some(document) = web_sys::window().and_then(|w| w.document()) {
-            if let Some(canvas) = document.get_element_by_id(canvas_id) {
-                if let Ok(canvas_element) = canvas.dyn_into::<HtmlCanvasElement>() {
-                    draw_chart(&canvas_element, &series);
+            if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+                if let Some(canvas) = document.get_element_by_id(canvas_id) {
+                    if let Ok(canvas_element) = canvas.dyn_into::<HtmlCanvasElement>() {
+                        draw_chart(&canvas_element, &series);
+                    }
                 }
             }
+        });
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    let chart_element = rsx! {
+        canvas {
+            id: "{canvas_id}",
+            class: "history-canvas",
+            width: "900",
+            height: "600",
         }
-    });
+    };
+
+    #[cfg(not(target_arch = "wasm32"))]
+    let chart_element = rsx! {
+        div { class: "card", "Charts not supported in this mode" }
+    };
 
     rsx! {
         div { class: "history",
             div { class: "history-chart",
-                canvas {
-                    id: "{canvas_id}",
-                    class: "history-canvas",
-                    width: "900",
-                    height: "600",
-                }
+                {chart_element}
                 div { class: "chart-legend",
                     for item in series.iter() {
                         div { class: "chart-legend-item", key: "{item.label}",

@@ -1,10 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_router::components::*;
-use js_sys::Date;
 use serde_json::Value;
-use wasm_bindgen::JsValue;
 
-use crate::api::{get_json, sleep};
+use crate::api::{format_epoch_seconds, get_json, sleep};
 use crate::models::DeviceDetails;
 use crate::routes::Route;
 
@@ -20,8 +17,7 @@ fn format_value(value: &Value) -> String {
 
 fn format_last_seen(value: &Value) -> String {
     if let Some(ts) = value.as_f64() {
-        let date = Date::new(&JsValue::from_f64(ts * 1000.0));
-        return date.to_string().into();
+        return format_epoch_seconds(ts);
     }
     format_value(value)
 }

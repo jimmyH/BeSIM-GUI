@@ -1,0 +1,16 @@
+# Build the desktop application
+FROM rust:1.93-trixie
+RUN apt update && apt upgrade -y && apt install -y \
+  libwebkit2gtk-4.1-dev \
+  build-essential \
+  curl \
+  wget \
+  file \
+  libxdo-dev \
+  libssl-dev \
+  libayatana-appindicator3-dev \
+  librsvg2-dev \
+  lld
+COPY . /app
+WORKDIR /app
+RUN cargo build --bin besim_gui_dioxus_desktop --release

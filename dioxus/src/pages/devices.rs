@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use dioxus_router::components::*;
 
 use crate::api::get_json;
 use crate::routes::Route;

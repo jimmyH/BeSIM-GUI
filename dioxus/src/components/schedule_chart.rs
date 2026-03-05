@@ -1,18 +1,19 @@
 use dioxus::prelude::*;
-use js_sys::Date;
+
+use crate::api;
 
 #[component]
 pub fn ScheduleChart(data: Vec<u8>, on_select: EventHandler<usize>, selected_day: u8) -> Element {
     let mut hovered = use_signal(|| None::<usize>);
 
     let today_idx = {
-        let now = Date::new_0();
-        let current_hour = now.get_hours() as usize;
-        let current_minute = now.get_minutes() as usize;
+        let now = api::local_clock();
+        let current_hour = now.hours as usize;
+        let current_minute = now.minutes as usize;
         current_hour * 2 + if current_minute >= 30 { 1 } else { 0 }
     };
 
-    let today_day = Date::new_0().get_day() as u8;
+    let today_day = api::local_clock().weekday as u8;
 
     rsx! {
         div { class: "schedule-chart",

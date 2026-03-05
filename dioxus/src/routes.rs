@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use dioxus_router::Routable;
 
 use crate::app::Layout;
 use crate::pages;

@@ -1,9 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_router::components::*;
-use js_sys::Date;
 use serde_json::Value;
 
-use crate::api::{get_json, put_json, sleep};
+use crate::api::{get_json, local_clock, put_json, sleep};
 use crate::components::schedule_chart::ScheduleChart;
 use crate::models::Room;
 use crate::routes::Route;
@@ -48,7 +46,7 @@ fn day_options() -> Vec<DayOption> {
 }
 
 fn current_day() -> u8 {
-    Date::new_0().get_day() as u8
+    local_clock().weekday as u8
 }
 
 fn weather_temp(weather: &Value) -> Option<f64> {

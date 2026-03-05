@@ -2,10 +2,17 @@
 name = "besim_gui_dioxus"
 default_platform = "web"
 
-[web.app]
-title = "BeSMART"
+[bundle]
+identifier = "com.besmart.app"
+
+[web]
+app.title = "BeSMART"
+# Serve static assets from the public folder
+asset_dir = "public"
 
 [web.watcher]
+# Watch for changes in source files
+watch_path = ["src"]
 
 [web.resource]
 style = []

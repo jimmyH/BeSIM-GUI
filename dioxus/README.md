@@ -12,7 +12,7 @@ This is a port of the Yew-based BeSMART GUI to the Dioxus framework.
 Run the development server with hot reloading:
 
 ```bash
-API_URL=https://<api endpoint>/api/v1.0/ dx serve --hot-reload
+API_URL=https://<api endpoint>/api/v1.0/ dx serve --platform web --hot-reload
 ```
 
 Or without an API URL (will use window.__API_URL or build-time API_URL):

@@ -1,8 +1,6 @@
 use dioxus::prelude::*;
-use dioxus_router::components::*;
-use js_sys::Date;
 
-use crate::api;
+use crate::api::{self, LocalClock};
 use crate::routes::Route;
 
 fn day_name(day: u32) -> &'static str {
@@ -18,9 +16,9 @@ fn day_name(day: u32) -> &'static str {
     }
 }
 
-fn format_time(date: &Date) -> String {
-    let hours = date.get_hours();
-    let minutes = date.get_minutes();
+fn format_time(clock: &LocalClock) -> String {
+    let hours = clock.hours;
+    let minutes = clock.minutes;
     format!("{:02}:{:02}", hours, minutes)
 }
 
@@ -33,17 +31,17 @@ pub fn App() -> Element {
 
 #[component]
 pub fn Layout() -> Element {
-    let mut now = use_signal(Date::new_0);
+    let mut now = use_signal(api::local_clock);
 
     use_future(move || async move {
         loop {
             api::sleep(5000).await;
-            now.set(Date::new_0());
+            now.set(api::local_clock());
         }
     });
 
     let current_date = now.read();
-    let day = day_name(current_date.get_day());
+    let day = day_name(current_date.weekday);
     let time = format_time(&current_date);
 
     rsx! {
