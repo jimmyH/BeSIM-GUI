@@ -5,7 +5,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlSelectElement;
 use yew::prelude::*;
-use yew_icons::{Icon, IconId};
+use yew_icons::{Icon, IconData};
 use yew_router::prelude::*;
 
 use crate::api::{get_json, put_json};
@@ -463,12 +463,12 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
             </div>
             <div class="nav">
                 { if room_data.lowbattery == 1 {
-                    html! { <Icon icon_id={IconId::BootstrapBattery} width={"24px"} height={"24px"} /> }
+                    html! { <Icon data={IconData::BOOTSTRAP_BATTERY} width={"24px"} height={"24px"} /> }
                 } else {
-                    html! { <Icon icon_id={IconId::BootstrapBatteryFull} width={"24px"} height={"24px"} /> }
+                    html! { <Icon data={IconData::BOOTSTRAP_BATTERY_FULL} width={"24px"} height={"24px"} /> }
                 } }
-                { if room_data.cmdissued == 1 { html! { <Icon icon_id={IconId::BootstrapArrowLeftRight} width={"24px"} height={"24px"} /> } } else { html! {} } }
-                { if room_data.heating { html! { <Icon icon_id={IconId::BootstrapFire} width={"24px"} height={"24px"} /> } } else { html! {} } }
+                { if room_data.cmdissued == 1 { html! { <Icon data={IconData::BOOTSTRAP_ARROW_LEFT_RIGHT} width={"24px"} height={"24px"} /> } } else { html! {} } }
+                { if room_data.heating { html! { <Icon data={IconData::BOOTSTRAP_FIRE} width={"24px"} height={"24px"} /> } } else { html! {} } }
                 { if room_data.winter == 0 { html! { <div class="badge">{"Cool"}</div> } } else { html! {} } }
                 { if room_data.advance == 1 { html! { <div class="badge">{"A"}</div> } } else { html! {} } }
                 { if room_data.boost == 1 || room_data.fakeboost != 0 { html! { <div class="badge">{"B"}</div> } } else { html! {} } }
