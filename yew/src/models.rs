@@ -5,15 +5,15 @@ use std::collections::HashMap;
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(default)]
 pub struct DeviceDetails {
-    pub wifisignal: Value,
+    pub wifi_signal: Value,
     pub version: Value,
     pub addr: Vec<Value>,
-    pub lastseen: Value,
-    pub boilerOn: Value,
-    pub dhwMode: Value,
-    pub tFLO: Value,
-    pub tdH: Value,
-    pub tESt: Value,
+    pub last_seen: Value,
+    pub boiler_on: Value,
+    pub dhw_mode: Value,
+    pub t_flo: Value,
+    pub t_dh: Value,
+    pub t_est: Value,
 }
 
 fn deserialize_days<'de, D>(deserializer: D) -> Result<Vec<Vec<u8>>, D::Error>

@@ -3,9 +3,10 @@ use js_sys::Date;
 use serde_json::Value;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
-use yew::prelude::*;
-use yew_router::prelude::*;
 use web_sys::HtmlSelectElement;
+use yew::prelude::*;
+use yew_icons::{Icon, IconId};
+use yew_router::prelude::*;
 
 use crate::api::{get_json, put_json};
 use crate::components::schedule_chart::ScheduleChart;
@@ -26,13 +27,34 @@ struct DayOption {
 
 fn day_options() -> Vec<DayOption> {
     vec![
-        DayOption { value: 0, label: "Sunday" },
-        DayOption { value: 1, label: "Monday" },
-        DayOption { value: 2, label: "Tuesday" },
-        DayOption { value: 3, label: "Wednesday" },
-        DayOption { value: 4, label: "Thursday" },
-        DayOption { value: 5, label: "Friday" },
-        DayOption { value: 6, label: "Saturday" },
+        DayOption {
+            value: 0,
+            label: "Sunday",
+        },
+        DayOption {
+            value: 1,
+            label: "Monday",
+        },
+        DayOption {
+            value: 2,
+            label: "Tuesday",
+        },
+        DayOption {
+            value: 3,
+            label: "Wednesday",
+        },
+        DayOption {
+            value: 4,
+            label: "Thursday",
+        },
+        DayOption {
+            value: 5,
+            label: "Friday",
+        },
+        DayOption {
+            value: 6,
+            label: "Saturday",
+        },
     ]
 }
 
@@ -155,7 +177,9 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let room_state = room_state.clone();
                 let error_state = error_state.clone();
                 spawn_local(async move {
-                    match get_json::<Room>(&format!("devices/{}/rooms/{}", device_id, room_id)).await {
+                    match get_json::<Room>(&format!("devices/{}/rooms/{}", device_id, room_id))
+                        .await
+                    {
                         Ok(data) => room_state.set(Some(data)),
                         Err(err) => error_state.set(Some(err)),
                     }
@@ -194,15 +218,17 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
         return html! { <div class="card">{"Loading room..."}</div> };
     };
 
-    let weather_temp_value = (*weather).as_ref().and_then(|value| weather_temp(value));
-    let weather_symbol_value = (*weather).as_ref().and_then(|value| weather_symbol(value));
+    let weather_temp_value = (*weather).as_ref().and_then(weather_temp);
+    let weather_symbol_value = (*weather).as_ref().and_then(weather_symbol);
 
     let schedule = schedule_data(&room_data, *selected_day);
 
     let on_day_change = {
         let selected_day = selected_day.clone();
         Callback::from(move |event: Event| {
-            let target = event.target().and_then(|t| t.dyn_into::<HtmlSelectElement>().ok());
+            let target = event
+                .target()
+                .and_then(|t| t.dyn_into::<HtmlSelectElement>().ok());
             if let Some(select) = target {
                 if let Ok(value) = select.value().parse::<u8>() {
                     selected_day.set(value);
@@ -217,7 +243,9 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
         let room_id = props.room_id.clone();
         let selected_day = selected_day.clone();
         Callback::from(move |idx: usize| {
-            let Some(mut room_data) = (*room).clone() else { return; };
+            let Some(mut room_data) = (*room).clone() else {
+                return;
+            };
             let mut days = room_data.days.clone();
             let day = *selected_day;
             let current = get_prog(&room_data, day, idx);
@@ -229,7 +257,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
             let device_id = device_id.clone();
             let room_id = room_id.clone();
             spawn_local(async move {
-                let _ = put_json(&format!("devices/{}/rooms/{}/days/{}", device_id, room_id, day), &days[day as usize]).await;
+                let _ = put_json(
+                    &format!("devices/{}/rooms/{}/days/{}", device_id, room_id, day),
+                    &days[day as usize],
+                )
+                .await;
             });
         })
     };
@@ -245,7 +277,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/units", device_id, room_id), &val).await;
+                    let _ = put_json(
+                        &format!("devices/{}/rooms/{}/units", device_id, room_id),
+                        &val,
+                    )
+                    .await;
                 });
             }
         })
@@ -262,7 +298,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/mode", device_id, room_id), &val).await;
+                    let _ = put_json(
+                        &format!("devices/{}/rooms/{}/mode", device_id, room_id),
+                        &val,
+                    )
+                    .await;
                 });
             }
         })
@@ -279,7 +319,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/winter", device_id, room_id), &val).await;
+                    let _ = put_json(
+                        &format!("devices/{}/rooms/{}/winter", device_id, room_id),
+                        &val,
+                    )
+                    .await;
                 });
             }
         })
@@ -297,7 +341,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/advance", device_id, room_id), &val).await;
+                    let _ = put_json(
+                        &format!("devices/{}/rooms/{}/advance", device_id, room_id),
+                        &val,
+                    )
+                    .await;
                 });
             }
         })
@@ -316,7 +364,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                     let device_id = device_id.clone();
                     let room_id = room_id.clone();
                     spawn_local(async move {
-                        let _ = put_json(&format!("devices/{}/rooms/{}/fakeboost", device_id, room_id), &val).await;
+                        let _ = put_json(
+                            &format!("devices/{}/rooms/{}/fakeboost", device_id, room_id),
+                            &val,
+                        )
+                        .await;
                     });
                 }
             }
@@ -335,7 +387,8 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/t1", device_id, room_id), &val).await;
+                    let _ = put_json(&format!("devices/{}/rooms/{}/t1", device_id, room_id), &val)
+                        .await;
                 });
             }
         })
@@ -353,7 +406,8 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/t2", device_id, room_id), &val).await;
+                    let _ = put_json(&format!("devices/{}/rooms/{}/t2", device_id, room_id), &val)
+                        .await;
                 });
             }
         })
@@ -371,7 +425,8 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
                 spawn_local(async move {
-                    let _ = put_json(&format!("devices/{}/rooms/{}/t3", device_id, room_id), &val).await;
+                    let _ = put_json(&format!("devices/{}/rooms/{}/t3", device_id, room_id), &val)
+                        .await;
                 });
             }
         })
@@ -389,21 +444,28 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                 </div>
                 <div class="field">
                     <label for="day-select">{"Day"}</label>
-                    <select id="day-select" value={(*selected_day).to_string()} onchange={on_day_change}>
+                    <select id="day-select" onchange={on_day_change}>
                         { for day_options().iter().map(|day| {
-                            html! { <option value={day.value.to_string()}>{day.label}</option> }
+                            let is_selected = *selected_day == day.value;
+                            html! {
+                                <option value={day.value.to_string()} selected={is_selected}>{day.label}</option>
+                            }
                         }) }
                     </select>
                 </div>
             </div>
 
             <div class="graph">
-                <ScheduleChart data={schedule} on_select={on_schedule_select} />
+                <ScheduleChart data={schedule} on_select={on_schedule_select} selected_day={*selected_day} />
             </div>
 
             <div class="nav">
-                { if room_data.lowbattery == 1 { html! { <div class="badge">{"Battery"}</div> } } else { html! {} } }
-                { if room_data.cmdissued == 1 { html! { <div class="badge">{"Cmd"}</div> } } else { html! {} } }
+                { if room_data.lowbattery == 1 {
+                    html! { <Icon icon_id={IconId::BootstrapBattery} />}
+                } else {
+                    html!{ <Icon icon_id={IconId::BootstrapBatteryFull} />}
+                } }
+                { if room_data.cmdissued == 1 { html! { <Icon icon_id={IconId::BootstrapArrowLeftRight} /> } } else { html! {} } }
                 { if room_data.heating { html! { <div class="badge">{"Heat"}</div> } } else { html! {} } }
                 { if room_data.winter == 0 { html! { <div class="badge">{"Cool"}</div> } } else { html! {} } }
                 { if room_data.advance == 1 { html! { <div class="badge">{"A"}</div> } } else { html! {} } }

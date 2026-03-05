@@ -5,8 +5,8 @@ use plotters_canvas::CanvasBackend;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::spawn_local;
-use yew::prelude::*;
 use web_sys::{HtmlCanvasElement, HtmlInputElement};
+use yew::prelude::*;
 
 use crate::api::get_json;
 use crate::models::{RoomHistoryPoint, WeatherHistoryPoint};
@@ -146,65 +146,82 @@ pub fn room_history_page(props: &RoomHistoryProps) -> Html {
         let start_date = start_date.clone();
         let end_date = end_date.clone();
 
-        use_effect_with((device_id, room_id, (*start_date).clone(), (*end_date).clone()), move |(device_id, room_id, start_date, end_date)| {
-            let device_id = device_id.clone();
-            let room_id = room_id.clone();
-            let room_history_state = room_history.clone();
-            let weather_history_state = weather_history.clone();
-            let error_state = error.clone();
-
-            let start_date = start_date.clone();
-            let end_date = end_date.clone();
-
-            let fetch_history = move || {
+        use_effect_with(
+            (
+                device_id,
+                room_id,
+                (*start_date).clone(),
+                (*end_date).clone(),
+            ),
+            move |(device_id, room_id, start_date, end_date)| {
                 let device_id = device_id.clone();
                 let room_id = room_id.clone();
-                let room_history_state = room_history_state.clone();
-                let weather_history_state = weather_history_state.clone();
-                let error_state = error_state.clone();
+                let room_history_state = room_history.clone();
+                let weather_history_state = weather_history.clone();
+                let error_state = error.clone();
+
                 let start_date = start_date.clone();
                 let end_date = end_date.clone();
 
-                spawn_local(async move {
-                    let from = to_iso_date(&start_date).unwrap_or_default();
-                    let to = end_date.as_ref().and_then(|value| to_iso_date(value));
-                    let room_url = if let Some(to) = to.clone() {
-                        format!("devices/{}/rooms/{}/history?from={}&to={}", device_id, room_id, from, to)
-                    } else {
-                        format!("devices/{}/rooms/{}/history?from={}", device_id, room_id, from)
-                    };
+                let fetch_history = move || {
+                    let device_id = device_id.clone();
+                    let room_id = room_id.clone();
+                    let room_history_state = room_history_state.clone();
+                    let weather_history_state = weather_history_state.clone();
+                    let error_state = error_state.clone();
+                    let start_date = start_date.clone();
+                    let end_date = end_date.clone();
 
-                    match get_json::<Vec<RoomHistoryPoint>>(&room_url).await {
-                        Ok(data) => room_history_state.set(data),
-                        Err(err) => {
-                            error_state.set(Some(err));
-                            return;
+                    spawn_local(async move {
+                        let from = to_iso_date(&start_date).unwrap_or_default();
+                        let to = end_date.as_ref().and_then(|value| to_iso_date(value));
+                        let room_url = if let Some(to) = to.clone() {
+                            format!(
+                                "devices/{}/rooms/{}/history?from={}&to={}",
+                                device_id, room_id, from, to
+                            )
+                        } else {
+                            format!(
+                                "devices/{}/rooms/{}/history?from={}",
+                                device_id, room_id, from
+                            )
+                        };
+
+                        match get_json::<Vec<RoomHistoryPoint>>(&room_url).await {
+                            Ok(data) => room_history_state.set(data),
+                            Err(err) => {
+                                error_state.set(Some(err));
+                                return;
+                            }
                         }
-                    }
 
-                    let weather_url = if let Some(to) = to {
-                        format!("weather/history?from={}&to={}", from, to)
-                    } else {
-                        format!("weather/history?from={}", from)
-                    };
+                        let weather_url = if let Some(to) = to {
+                            format!("weather/history?from={}&to={}", from, to)
+                        } else {
+                            format!("weather/history?from={}", from)
+                        };
 
-                    match get_json::<Vec<WeatherHistoryPoint>>(&weather_url).await {
-                        Ok(data) => weather_history_state.set(data),
-                        Err(err) => error_state.set(Some(err)),
-                    }
-                });
-            };
+                        match get_json::<Vec<WeatherHistoryPoint>>(&weather_url).await {
+                            Ok(data) => weather_history_state.set(data),
+                            Err(err) => error_state.set(Some(err)),
+                        }
+                    });
+                };
 
-            fetch_history();
-            let handle = Interval::new(60000, fetch_history);
-            move || drop(handle)
-        });
+                fetch_history();
+                let handle = Interval::new(60000, fetch_history);
+                move || drop(handle)
+            },
+        );
     }
 
     let on_start_date = {
         let start_date = start_date.clone();
         Callback::from(move |event: Event| {
-            if let Some(input) = event.target().and_then(|t| t.dyn_into::<HtmlInputElement>().ok()) {
+            if let Some(input) = event
+                .target()
+                .and_then(|t| t.dyn_into::<HtmlInputElement>().ok())
+            {
                 start_date.set(input.value());
             }
         })
@@ -213,7 +230,10 @@ pub fn room_history_page(props: &RoomHistoryProps) -> Html {
     let on_end_date = {
         let end_date = end_date.clone();
         Callback::from(move |event: Event| {
-            if let Some(input) = event.target().and_then(|t| t.dyn_into::<HtmlInputElement>().ok()) {
+            if let Some(input) = event
+                .target()
+                .and_then(|t| t.dyn_into::<HtmlInputElement>().ok())
+            {
                 let value = input.value();
                 if value.is_empty() {
                     end_date.set(None);
@@ -256,24 +276,39 @@ pub fn room_history_page(props: &RoomHistoryProps) -> Html {
             .chain(outside_points.iter())
             .map(|(_, y)| *y)
             .fold(f64::INFINITY, |acc, val| acc.min(val));
-        let max = temp_points
+        let _max = temp_points
             .iter()
             .chain(set_points.iter())
             .chain(outside_points.iter())
             .map(|(_, y)| *y)
             .fold(f64::NEG_INFINITY, |acc, val| acc.max(val));
-        let base = if min.is_finite() && max.is_finite() { min - (max - min) * 0.1 } else { 0.0 };
         heating_points = heating_points
             .into_iter()
-            .map(|(ts, heat)| (ts, if heat > 0.0 { base + 0.2 } else { base }))
+            .map(|(ts, heat)| (ts, if min < 0.0 { heat - min } else { heat }))
             .collect();
     }
 
     let series = vec![
-        SeriesData { label: "Temp".to_string(), color: "#F25C5C".to_string(), points: temp_points },
-        SeriesData { label: "SetTemp".to_string(), color: "#2A92BF".to_string(), points: set_points },
-        SeriesData { label: "Outside".to_string(), color: "#8FCB9B".to_string(), points: outside_points },
-        SeriesData { label: "Heating".to_string(), color: "#F2C94C".to_string(), points: heating_points },
+        SeriesData {
+            label: "Temp".to_string(),
+            color: "#F25C5C".to_string(),
+            points: temp_points,
+        },
+        SeriesData {
+            label: "SetTemp".to_string(),
+            color: "#2A92BF".to_string(),
+            points: set_points,
+        },
+        SeriesData {
+            label: "Outside".to_string(),
+            color: "#8FCB9B".to_string(),
+            points: outside_points,
+        },
+        SeriesData {
+            label: "Heating".to_string(),
+            color: "#F2C94C".to_string(),
+            points: heating_points,
+        },
     ];
 
     {

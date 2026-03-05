@@ -1,0 +1,12 @@
+/* Highlight the current time slot bar in the schedule chart */
+.schedule-bar-current {
+  border: 2px solid #1976d2;
+  box-shadow: 0 0 8px #1976d2;
+  z-index: 2;
+}
+
+/* Optional: improve tooltip appearance */
+.schedule-tooltip {
+  font-size: 0.95em;
+  font-family: inherit;
+}
