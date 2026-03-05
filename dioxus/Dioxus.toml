@@ -1,0 +1,16 @@
+[application]
+name = "besim_gui_dioxus"
+default_platform = "web"
+
+[web.app]
+title = "BeSMART"
+
+[web.watcher]
+
+[web.resource]
+style = []
+script = []
+
+[web.resource.dev]
+
+[web.resource.release]
