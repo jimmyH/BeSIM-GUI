@@ -1,10 +1,9 @@
 use dioxus::prelude::*;
 use dioxus_router::components::*;
-use gloo_timers::future::TimeoutFuture;
 use js_sys::Date;
 use serde_json::Value;
 
-use crate::api::{get_json, put_json};
+use crate::api::{get_json, put_json, sleep};
 use crate::components::schedule_chart::ScheduleChart;
 use crate::models::Room;
 use crate::routes::Route;
@@ -192,7 +191,7 @@ pub fn RoomDetailsPage(device_id: String, room_id: String) -> Element {
                     Ok(data) => room.set(Some(data)),
                     Err(err) => error.set(Some(err)),
                 }
-                TimeoutFuture::new(5000).await;
+                sleep(5000).await;
             }
         }
     });
@@ -203,7 +202,7 @@ pub fn RoomDetailsPage(device_id: String, room_id: String) -> Element {
                 Ok(data) => weather.set(Some(data)),
                 Err(err) => error.set(Some(err)),
             }
-            TimeoutFuture::new(600000).await;
+            sleep(600000).await;
         }
     });
 

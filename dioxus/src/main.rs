@@ -1,11 +1,9 @@
-mod api;
-mod app;
-mod components;
-mod models;
-mod pages;
-mod routes;
+// Desktop entry point (requires dioxus-desktop feature)
+#![allow(non_snake_case)]
 
+use besim_gui_dioxus::App;
+
+#[cfg(not(target_arch = "wasm32"))]
 fn main() {
-    console_error_panic_hook::set_once();
-    dioxus::launch(app::App);
+    dioxus_desktop::launch(App);
 }

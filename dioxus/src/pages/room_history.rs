@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use gloo_timers::future::TimeoutFuture;
 use js_sys::Date;
 use plotters::prelude::*;
 use plotters_canvas::CanvasBackend;
@@ -236,7 +235,7 @@ pub fn RoomHistoryPage(device_id: String, room_id: String) -> Element {
                     Err(err) => error.set(Some(err)),
                 }
 
-                TimeoutFuture::new(60000).await;
+                crate::api::sleep(60000).await;
             }
         }
     });

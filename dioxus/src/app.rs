@@ -1,8 +1,8 @@
 use dioxus::prelude::*;
 use dioxus_router::components::*;
-use gloo_timers::future::TimeoutFuture;
 use js_sys::Date;
 
+use crate::api;
 use crate::routes::Route;
 
 fn day_name(day: u32) -> &'static str {
@@ -37,7 +37,7 @@ pub fn Layout() -> Element {
 
     use_future(move || async move {
         loop {
-            TimeoutFuture::new(5000).await;
+            api::sleep(5000).await;
             now.set(Date::new_0());
         }
     });

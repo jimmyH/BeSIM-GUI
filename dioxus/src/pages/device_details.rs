@@ -1,11 +1,10 @@
 use dioxus::prelude::*;
 use dioxus_router::components::*;
-use gloo_timers::future::TimeoutFuture;
 use js_sys::Date;
 use serde_json::Value;
 use wasm_bindgen::JsValue;
 
-use crate::api::get_json;
+use crate::api::{get_json, sleep};
 use crate::models::DeviceDetails;
 use crate::routes::Route;
 
@@ -41,7 +40,7 @@ pub fn DeviceDetailsPage(id: String) -> Element {
                     Ok(data) => device.set(Some(data)),
                     Err(err) => error.set(Some(err)),
                 }
-                TimeoutFuture::new(5000).await;
+                sleep(5000).await;
             }
         }
     });

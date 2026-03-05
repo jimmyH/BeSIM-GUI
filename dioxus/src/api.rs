@@ -1,11 +1,18 @@
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use wasm_bindgen::JsValue;
 
+#[cfg(target_arch = "wasm32")]
 fn from_window_api_url() -> Option<String> {
+    use wasm_bindgen::JsValue;
     let window = web_sys::window()?;
     let value = js_sys::Reflect::get(&window, &JsValue::from_str("__API_URL")).ok()?;
     value.as_string()
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn from_window_api_url() -> Option<String> {
+    // Desktop: use environment variable or None
+    std::env::var("API_URL").ok()
 }
 
 fn normalize_base(base: String) -> String {
@@ -34,6 +41,18 @@ pub fn api_base_url() -> String {
         build.to_string()
     };
     normalize_base(base)
+}
+
+// Cross-platform sleep helper
+#[cfg(target_arch = "wasm32")]
+pub async fn sleep(ms: u32) {
+    use gloo_timers::future::TimeoutFuture;
+    TimeoutFuture::new(ms).await;
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+pub async fn sleep(ms: u32) {
+    tokio::time::sleep(std::time::Duration::from_millis(ms as u64)).await;
 }
 
 pub async fn get_json<T: DeserializeOwned>(path: &str) -> Result<T, String> {
