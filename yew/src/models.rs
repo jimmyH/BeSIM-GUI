@@ -5,14 +5,21 @@ use std::collections::HashMap;
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(default)]
 pub struct DeviceDetails {
+    #[serde(rename = "wifisignal")]
     pub wifi_signal: Value,
     pub version: Value,
     pub addr: Vec<Value>,
+    #[serde(rename = "lastseen")]
     pub last_seen: Value,
+    #[serde(rename = "boilerOn")]
     pub boiler_on: Value,
+    #[serde(rename = "dhwMode")]
     pub dhw_mode: Value,
+    #[serde(rename = "tFLO")]
     pub t_flo: Value,
+    #[serde(rename = "tdH")]
     pub t_dh: Value,
+    #[serde(rename = "tESt")]
     pub t_est: Value,
 }
 

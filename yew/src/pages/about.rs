@@ -4,7 +4,7 @@ use yew::prelude::*;
 pub fn about_page() -> Html {
     html! {
         <div class="card">
-            <p>{"Test app using Yew to consume the BeSMART REST API."}</p>
+            <p>{ "Test app using Yew to consume the BeSMART REST API." }</p>
         </div>
     }
 }

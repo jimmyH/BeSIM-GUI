@@ -34,11 +34,11 @@ pub fn rooms_page(props: &RoomsProps) -> Html {
     }
 
     if let Some(message) = (*error).clone() {
-        return html! { <div class="card error">{message}</div> };
+        return html! { <div class="card error">{ message }</div> };
     }
 
     if rooms.is_empty() {
-        return html! { <div class="card">{"Loading rooms..."}</div> };
+        return html! { <div class="card">{ "Loading rooms..." }</div> };
     }
 
     html! {

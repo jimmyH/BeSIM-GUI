@@ -245,7 +245,7 @@ pub fn room_history_page(props: &RoomHistoryProps) -> Html {
     };
 
     if let Some(message) = (*error).clone() {
-        return html! { <div class="card error">{message}</div> };
+        return html! { <div class="card error">{ message }</div> };
     }
 
     let mut temp_points = Vec::new();
@@ -325,7 +325,7 @@ pub fn room_history_page(props: &RoomHistoryProps) -> Html {
     html! {
         <div class="history">
             <div class="history-chart">
-                <canvas ref={canvas_ref} class="history-canvas" width="900" height="600"></canvas>
+                <canvas ref={canvas_ref} class="history-canvas" width="900" height="600" />
                 <div class="chart-legend">
                     { for series.iter().map(|item| html! {
                         <div class="chart-legend-item">
@@ -337,12 +337,16 @@ pub fn room_history_page(props: &RoomHistoryProps) -> Html {
             </div>
             <div class="history-controls">
                 <label>
-                    {"Start date"}
+                    { "Start date" }
                     <input type="date" value={(*start_date).clone()} onchange={on_start_date} />
                 </label>
                 <label>
-                    {"End date"}
-                    <input type="date" value={(*end_date).clone().unwrap_or_default()} onchange={on_end_date} />
+                    { "End date" }
+                    <input
+                        type="date"
+                        value={(*end_date).clone().unwrap_or_default()}
+                        onchange={on_end_date}
+                    />
                 </label>
             </div>
         </div>

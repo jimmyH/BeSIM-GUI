@@ -25,11 +25,11 @@ pub fn devices_page() -> Html {
     }
 
     if let Some(message) = (*error).clone() {
-        return html! { <div class="card error">{message}</div> };
+        return html! { <div class="card error">{ message }</div> };
     }
 
     if devices.is_empty() {
-        return html! { <div class="card">{"Loading devices..."}</div> };
+        return html! { <div class="card">{ "Loading devices..." }</div> };
     }
 
     html! {

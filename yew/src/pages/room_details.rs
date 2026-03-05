@@ -211,11 +211,11 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
     }
 
     if let Some(message) = (*error).clone() {
-        return html! { <div class="card error">{message}</div> };
+        return html! { <div class="card error">{ message }</div> };
     }
 
     let Some(room_data) = (*room).clone() else {
-        return html! { <div class="card">{"Loading room..."}</div> };
+        return html! { <div class="card">{ "Loading room..." }</div> };
     };
 
     let weather_temp_value = (*weather).as_ref().and_then(weather_temp);
@@ -435,7 +435,7 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
     html! {
         <div class="container">
             <div class="main">
-                <h1>{format!("{}°", display_temp(&room_data, room_data.temp))}</h1>
+                <h1>{ format!("{}°", display_temp(&room_data, room_data.temp)) }</h1>
                 <div class="weather">
                     { weather_temp_value.map(|temp| html! { <span>{format!("{:.1}°", temp)}</span> }).unwrap_or_default() }
                     { weather_symbol_value.clone().map(|code| html! {
@@ -443,7 +443,7 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                     }).unwrap_or_default() }
                 </div>
                 <div class="field">
-                    <label for="day-select">{"Day"}</label>
+                    <label for="day-select">{ "Day" }</label>
                     <select id="day-select" onchange={on_day_change}>
                         { for day_options().iter().map(|day| {
                             let is_selected = *selected_day == day.value;
@@ -454,89 +454,120 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                     </select>
                 </div>
             </div>
-
             <div class="graph">
-                <ScheduleChart data={schedule} on_select={on_schedule_select} selected_day={*selected_day} />
+                <ScheduleChart
+                    data={schedule}
+                    on_select={on_schedule_select}
+                    selected_day={*selected_day}
+                />
             </div>
-
             <div class="nav">
                 { if room_data.lowbattery == 1 {
-                    html! { <Icon icon_id={IconId::BootstrapBattery} />}
+                    html! { <Icon icon_id={IconId::BootstrapBattery} width={"24px"} height={"24px"} /> }
                 } else {
-                    html!{ <Icon icon_id={IconId::BootstrapBatteryFull} />}
+                    html! { <Icon icon_id={IconId::BootstrapBatteryFull} width={"24px"} height={"24px"} /> }
                 } }
-                { if room_data.cmdissued == 1 { html! { <Icon icon_id={IconId::BootstrapArrowLeftRight} /> } } else { html! {} } }
-                { if room_data.heating { html! { <div class="badge">{"Heat"}</div> } } else { html! {} } }
+                { if room_data.cmdissued == 1 { html! { <Icon icon_id={IconId::BootstrapArrowLeftRight} width={"24px"} height={"24px"} /> } } else { html! {} } }
+                { if room_data.heating { html! { <Icon icon_id={IconId::BootstrapFire} width={"24px"} height={"24px"} /> } } else { html! {} } }
                 { if room_data.winter == 0 { html! { <div class="badge">{"Cool"}</div> } } else { html! {} } }
                 { if room_data.advance == 1 { html! { <div class="badge">{"A"}</div> } } else { html! {} } }
                 { if room_data.boost == 1 || room_data.fakeboost != 0 { html! { <div class="badge">{"B"}</div> } } else { html! {} } }
             </div>
-
             <div class="aside">
-                <div class={if room_data.t1 == room_data.settemp { "temp-bold" } else { "temp-norm" }}>
-                    <div>{format!("T1: {}°", display_temp(&room_data, room_data.t1))}</div>
-                    <button class="icon-button" onclick={{
+                <div
+                    class={if room_data.t1 == room_data.settemp { "temp-bold" } else { "temp-norm" }}
+                >
+                    <div>{ format!("T1: {}°", display_temp(&room_data, room_data.t1)) }</div>
+                    <button
+                        class="icon-button"
+                        onclick={{
                         let on_t1 = on_t1.clone();
                         Callback::from(move |_| on_t1.emit(2))
-                    }}>
-                        {"▲"}
+                    }}
+                    >
+                        { "▲" }
                     </button>
-                    <button class="icon-button" onclick={{
+                    <button
+                        class="icon-button"
+                        onclick={{
                         let on_t1 = on_t1.clone();
                         Callback::from(move |_| on_t1.emit(-2))
-                    }}>
-                        {"▼"}
+                    }}
+                    >
+                        { "▼" }
                     </button>
                 </div>
-
-                <div class={if room_data.t2 == room_data.settemp { "temp-bold" } else { "temp-norm" }}>
-                    <div>{format!("T2: {}°", display_temp(&room_data, room_data.t2))}</div>
-                    <button class="icon-button" onclick={{
+                <div
+                    class={if room_data.t2 == room_data.settemp { "temp-bold" } else { "temp-norm" }}
+                >
+                    <div>{ format!("T2: {}°", display_temp(&room_data, room_data.t2)) }</div>
+                    <button
+                        class="icon-button"
+                        onclick={{
                         let on_t2 = on_t2.clone();
                         Callback::from(move |_| on_t2.emit(2))
-                    }}>
-                        {"▲"}
+                    }}
+                    >
+                        { "▲" }
                     </button>
-                    <button class="icon-button" onclick={{
+                    <button
+                        class="icon-button"
+                        onclick={{
                         let on_t2 = on_t2.clone();
                         Callback::from(move |_| on_t2.emit(-2))
-                    }}>
-                        {"▼"}
+                    }}
+                    >
+                        { "▼" }
                     </button>
                 </div>
-
-                <div class={if room_data.t3 == room_data.settemp { "temp-bold" } else { "temp-norm" }}>
-                    <div>{format!("T3: {}°", display_temp(&room_data, room_data.t3))}</div>
-                    <button class="icon-button" onclick={{
+                <div
+                    class={if room_data.t3 == room_data.settemp { "temp-bold" } else { "temp-norm" }}
+                >
+                    <div>{ format!("T3: {}°", display_temp(&room_data, room_data.t3)) }</div>
+                    <button
+                        class="icon-button"
+                        onclick={{
                         let on_t3 = on_t3.clone();
                         Callback::from(move |_| on_t3.emit(2))
-                    }}>
-                        {"▲"}
+                    }}
+                    >
+                        { "▲" }
                     </button>
-                    <button class="icon-button" onclick={{
+                    <button
+                        class="icon-button"
+                        onclick={{
                         let on_t3 = on_t3.clone();
                         Callback::from(move |_| on_t3.emit(-2))
-                    }}>
-                        {"▼"}
+                    }}
+                    >
+                        { "▼" }
                     </button>
                 </div>
             </div>
-
             <div class="footer">
                 <div class="toggle-group">
-                    <span>{"Season"}</span>
-                    <button class={if room_data.winter == 0 { "toggle active" } else { "toggle" }} onclick={{
+                    <span>{ "Season" }</span>
+                    <button
+                        class={if room_data.winter == 0 { "toggle active" } else { "toggle" }}
+                        onclick={{
                         let on_season_change = on_season_change.clone();
                         Callback::from(move |_| on_season_change.emit(0))
-                    }}>{"Cooling"}</button>
-                    <button class={if room_data.winter == 1 { "toggle active" } else { "toggle" }} onclick={{
+                    }}
+                    >
+                        { "Cooling" }
+                    </button>
+                    <button
+                        class={if room_data.winter == 1 { "toggle active" } else { "toggle" }}
+                        onclick={{
                         let on_season_change = on_season_change.clone();
                         Callback::from(move |_| on_season_change.emit(1))
-                    }}>{"Heating"}</button>
+                    }}
+                    >
+                        { "Heating" }
+                    </button>
                 </div>
-
                 <div class="toggle-group">
-                    <span>{"Mode"}</span>
+                    <span>{ "Mode" }</span>
                     { for ["Auto", "Manual", "Holiday", "Party", "Off", "DHW"].iter().enumerate().map(|(idx, label)| {
                         let active = room_data.mode == idx as i32;
                         let on_mode_change = on_mode_change.clone();
@@ -545,24 +576,45 @@ pub fn room_details_page(props: &RoomDetailsProps) -> Html {
                         }
                     }) }
                 </div>
-
                 <div class="toggle-group">
-                    <span>{"Units"}</span>
-                    <button class={if room_data.units == 0 { "toggle active" } else { "toggle" }} onclick={{
+                    <span>{ "Units" }</span>
+                    <button
+                        class={if room_data.units == 0 { "toggle active" } else { "toggle" }}
+                        onclick={{
                         let on_units_change = on_units_change.clone();
                         Callback::from(move |_| on_units_change.emit(0))
-                    }}>{"°C"}</button>
-                    <button class={if room_data.units == 1 { "toggle active" } else { "toggle" }} onclick={{
+                    }}
+                    >
+                        { "°C" }
+                    </button>
+                    <button
+                        class={if room_data.units == 1 { "toggle active" } else { "toggle" }}
+                        onclick={{
                         let on_units_change = on_units_change.clone();
                         Callback::from(move |_| on_units_change.emit(1))
-                    }}>{"°F"}</button>
+                    }}
+                    >
+                        { "°F" }
+                    </button>
                 </div>
-
                 <div class="footer-actions">
-                    <button class={if room_data.boost == 1 || room_data.fakeboost != 0 { "toggle active" } else { "toggle" }} onclick={on_boost_toggle}>{"Boost"}</button>
-                    <button class={if room_data.advance == 1 { "toggle active" } else { "toggle" }} onclick={on_advance_toggle}>{"Advance"}</button>
-                    <Link<Route> classes="button" to={Route::RoomHistory { device_id: props.device_id.clone(), room_id: props.room_id.clone() }}>
-                        {"Graphs"}
+                    <button
+                        class={if room_data.boost == 1 || room_data.fakeboost != 0 { "toggle active" } else { "toggle" }}
+                        onclick={on_boost_toggle}
+                    >
+                        { "Boost" }
+                    </button>
+                    <button
+                        class={if room_data.advance == 1 { "toggle active" } else { "toggle" }}
+                        onclick={on_advance_toggle}
+                    >
+                        { "Advance" }
+                    </button>
+                    <Link<Route>
+                        classes="button"
+                        to={Route::RoomHistory { device_id: props.device_id.clone(), room_id: props.room_id.clone() }}
+                    >
+                        { "Graphs" }
                     </Link<Route>>
                 </div>
             </div>

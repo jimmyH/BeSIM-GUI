@@ -44,13 +44,14 @@ pub fn schedule_chart(props: &ScheduleChartProps) -> Html {
                 bar_class.push_str(" schedule-bar-current");
             }
             html! {
-                <button class={bar_class}
+                <button
+                    class={bar_class}
                     style={format!("--bar-height: {}%; position: relative;", height)}
                     {onclick}
                     {onmouseover}
                     {onmouseout}
                 >
-                    <span class="sr-only">{format!("slot {}", idx)}</span>
+                    <span class="sr-only">{ format!("slot {}", idx) }</span>
                     { if *hovered == Some(idx) {
                         let hour = idx / 2;
                         let minute = (idx % 2) * 30;
@@ -79,7 +80,5 @@ pub fn schedule_chart(props: &ScheduleChartProps) -> Html {
         })
         .collect::<Html>();
 
-    html! {
-        <div class="schedule-chart">{bars}</div>
-    }
+    html! { <div class="schedule-chart">{ bars }</div> }
 }

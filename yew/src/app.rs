@@ -46,13 +46,17 @@ pub fn app() -> Html {
             <div class="wrapper">
                 <header class="header">
                     <div class="toolbar">
-                        <div class="logo">{"BeSMART"}</div>
+                        <div class="logo">{ "BeSMART" }</div>
                         <nav class="nav-links">
-                            <Link<Route> classes="nav-link" to={Route::Devices}>{"Devices"}</Link<Route>>
-                            <Link<Route> classes="nav-link" to={Route::About}>{"About"}</Link<Route>>
+                            <Link<Route> classes="nav-link" to={Route::Devices}>
+                                { "Devices" }
+                            </Link<Route>>
+                            <Link<Route> classes="nav-link" to={Route::About}>
+                                { "About" }
+                            </Link<Route>>
                         </nav>
-                        <div class="spacer"></div>
-                        <div class="clock">{format!("{} {}", day, time)}</div>
+                        <div class="spacer" />
+                        <div class="clock">{ format!("{} {}", day, time) }</div>
                     </div>
                 </header>
                 <main class="child">

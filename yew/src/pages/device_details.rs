@@ -66,11 +66,11 @@ pub fn device_details_page(props: &DeviceDetailsProps) -> Html {
     }
 
     if let Some(message) = (*error).clone() {
-        return html! { <div class="card error">{message}</div> };
+        return html! { <div class="card error">{ message }</div> };
     }
 
     let Some(device) = (*device).clone() else {
-        return html! { <div class="card">{"Loading device..."}</div> };
+        return html! { <div class="card">{ "Loading device..." }</div> };
     };
 
     let addr = device.addr.first().map(format_value).unwrap_or_default();
@@ -78,18 +78,47 @@ pub fn device_details_page(props: &DeviceDetailsProps) -> Html {
 
     html! {
         <div class="card stack">
-            <div><span class="label">{"WiFi Signal: "}</span>{format_value(&device.wifi_signal)}</div>
-            <div><span class="label">{"Version: "}</span>{format_value(&device.version)}</div>
-            <div><span class="label">{"IP: "}</span>{format!("{}:{}", addr, port)}</div>
-            <div><span class="label">{"Last Seen: "}</span>{format_last_seen(&device.last_seen)}</div>
-            <div><span class="label">{"OpenTherm:"}</span></div>
-            <div><span class="label">{"Boiler On: "}</span>{format_value(&device.boiler_on)}</div>
-            <div><span class="label">{"DHW On: "}</span>{format_value(&device.dhw_mode)}</div>
-            <div><span class="label">{"tFLO (flow sensor temperature): "}</span>{format_value(&device.t_flo)}</div>
-            <div><span class="label">{"tdH (DHW sensor temperature): "}</span>{format_value(&device.t_dh)}</div>
-            <div><span class="label">{"tESt (outdoor sensor temperature): "}</span>{format_value(&device.t_est)}</div>
+            <div>
+                <span class="label">{ "WiFi Signal: " }</span>
+                { format_value(&device.wifi_signal) }
+            </div>
+            <div>
+                <span class="label">{ "Version: " }</span>
+                { format_value(&device.version) }
+            </div>
+            <div>
+                <span class="label">{ "IP: " }</span>
+                { format!("{}:{}", addr, port) }
+            </div>
+            <div>
+                <span class="label">{ "Last Seen: " }</span>
+                { format_last_seen(&device.last_seen) }
+            </div>
+            <div>
+                <span class="label">{ "OpenTherm:" }</span>
+            </div>
+            <div>
+                <span class="label">{ "Boiler On: " }</span>
+                { format_value(&device.boiler_on) }
+            </div>
+            <div>
+                <span class="label">{ "DHW On: " }</span>
+                { format_value(&device.dhw_mode) }
+            </div>
+            <div>
+                <span class="label">{ "tFLO (flow sensor temperature): " }</span>
+                { format_value(&device.t_flo) }
+            </div>
+            <div>
+                <span class="label">{ "tdH (DHW sensor temperature): " }</span>
+                { format_value(&device.t_dh) }
+            </div>
+            <div>
+                <span class="label">{ "tESt (outdoor sensor temperature): " }</span>
+                { format_value(&device.t_est) }
+            </div>
             <Link<Route> classes="button" to={Route::Rooms { device_id: props.id.clone() }}>
-                {"Rooms"}
+                { "Rooms" }
             </Link<Route>>
         </div>
     }

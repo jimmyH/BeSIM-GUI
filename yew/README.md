@@ -4,3 +4,9 @@ Run using:
 ```
 API_URL=https://<api endpoint>/api/v1.0/ trunk serve --open
 ```
+
+Format using yew-fmt
+
+```
+RUSTFMT=yew-fmt cargo fmt
+```
