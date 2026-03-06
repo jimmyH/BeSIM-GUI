@@ -35,9 +35,6 @@ plotters-canvas = "0.3"
 dioxus = { version = "0.7", features = ["desktop", "logger", "router"] }
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 tokio = { version = "1", features = ["time"] }
-rust-embed = "8.11"
-http = "1.4"
-mime_guess = "2.0"
 
 [[bin]]
 name = "besim_gui_dioxus"
